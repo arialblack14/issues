@@ -1,5 +1,6 @@
-defmodule GithubIssues do
+defmodule Issues.GithubIssues do
   @user_agent [{"User-agent", "Elixir tsirasalexis@yahoo.gr"}]
+  @github_url Application.get_env(:issues, :github_url)
 
   def fetch(user, project) do
     issues_url(user, project)
@@ -8,9 +9,9 @@ defmodule GithubIssues do
   end
 
   defp issues_url(user, project) do
-    "https://api.github.com/repos/#{user}/#{project}/issues"
+    "#{@github_url}/repos/#{user}/#{project}/issues"
   end
 
-  defp handle_response(%{status_code: 200, body: body}), do: {:ok, body}
-  defp handle_response(%{status_code: _, body: body}), do: {:error, body}
+  defp handle_response(%{status_code: 200, body: body}), do: {:ok, :jsx.decode(body)}
+  defp handle_response(%{status_code: _, body: body}), do: {:error, :jsx.decode(body)}
 end

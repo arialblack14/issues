@@ -6,18 +6,18 @@ defmodule Issues.TableFormatter do
     column_widths = widths_of(data_by_columns)
     format = format_for(column_widths)
     puts_one_line_in_columns(headers, format)
-    IO.puts separator(column_widths)
+    IO.puts(separator(column_widths))
     puts_in_columns(data_by_columns, format)
   end
 
   def split_into_columns(rows, headers) do
-    for header <- headers, do
+    for header <- headers do
       for row <- rows, do: printable(row[header])
     end
   end
 
   def printable(str) when is_binary(str), do: str
-  def printable(str), to_string(str)
+  def printable(str), do: to_string(str)
 
   def widths_of(columns) do
     for column <- columns, do: column |> map(&String.length/1) |> max
@@ -33,7 +33,7 @@ defmodule Issues.TableFormatter do
 
   def puts_in_columns(data_by_columns, format) do
     data_by_columns
-    |> List.zip
+    |> List.zip()
     |> map(&Tuple.to_list/1)
     |> each(&puts_one_line_in_columns(&1, format))
   end
